@@ -7,8 +7,10 @@ sub initCustomThumbnails(msg as object)
     thumbnailData = msg.getData()
     if m.customThumbnailData = invalid
       m.customThumbnailData = thumbnailData
-    else
+    else if thumbnailData.items()[0].value[0].width > m.customThumbnailData.items()[0].value[0].width
       m.customThumbnailData.append(thumbnailData)
+    else
+      return
     end if
 
 #IF thumbnailDebug
@@ -292,7 +294,7 @@ function thumbnailEntryForTextureMapLimits(thumbnailData as object) as object
     end for
 #IF thumbnailDebug
     if entry <> invalid
-      ? "thumbnailEntryForTextureMapLimits(): selected data width = "; entry[0].width ; ", bandwidth = "; entry[0].bandwidth
+      ? "thumbnailEntryForTextureMapLimits(): selected data width = "; entry[0].width ; ", height = "; entry[0].height; ", bandwidth = "; entry[0].bandwidth
     end if
 #ENDIF
     return entry
