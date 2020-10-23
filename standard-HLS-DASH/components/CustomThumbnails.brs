@@ -4,16 +4,23 @@
 ' Retrieve the thumbnail data
 
 sub initCustomThumbnails(msg as object)
-    m.customThumbnailData = msg.getData()
+    thumbnailData = msg.getData()
+    if m.customThumbnailData = invalid
+      m.customThumbnailData = thumbnailData
+    else
+      m.customThumbnailData.append(thumbnailData)
+    end if
 
 #IF thumbnailDebug
     dumpThumbnailData(m.customThumbnailData)
 #ENDIF
 
     selectThumbnail()
-    m.trickInterval = m.selectedThumbnailData[0].duration / (m.selectedThumbnailData[0].htiles * m.selectedThumbnailData[0].vtiles)
-    initPosterSizes()
-    initTranslatePosters()
+    if m.selectedThumbnailData <> invalid
+      m.trickInterval = m.selectedThumbnailData[0].duration / (m.selectedThumbnailData[0].htiles * m.selectedThumbnailData[0].vtiles)
+      initPosterSizes()
+      initTranslatePosters()
+    end if
 end sub
 
 ' For the sake of this example, we will just use the last thumbnail tiles in the
@@ -126,17 +133,17 @@ sub renderPoster(position as double, arrayPosterIndex as integer)
             ' The center poster will have a slightly different width and height.
             if arrayPosterIndex <> 2
                 posterWidth = m.POSTER_WIDTH
-                posterHeight = m.POSTER_HEIGHT
             else
                 posterWidth = m.POSTER_WIDTH_CENTER
-                posterHeight = m.POSTER_HEIGHT_CENTER
             end if
+            thumbnail = m.selectedThumbnailData[discontinuityIndex]
+            posterHeight = posterWidth * thumbnail.height/thumbnail.width
 
             m.arrayPosters[arrayPosterIndex].clippingRect = [columnIndex * posterWidth, rowIndex * posterHeight, posterWidth, posterHeight]
             newTranslationX = m.arrayPosters[arrayPosterIndex].x - (posterWidth * columnIndex)
             newTranslationY = m.arrayPosters[arrayPosterIndex].y - (posterHeight * rowIndex)
             m.arrayPosters[arrayPosterIndex].translation = [newTranslationX, newTranslationY]
-            m.arrayPosters[arrayPosterIndex].uri = m.selectedThumbnailData[discontinuityIndex].tiles[spriteIndex][0]
+            m.arrayPosters[arrayPosterIndex].uri = thumbnail.tiles[spriteIndex][0]
         else
             #IF thumbnailDebug
                 ? "Thumbnail for poster index " + arrayPosterIndex.toStr() + " will be empty."
@@ -275,10 +282,12 @@ function thumbnailEntryForTextureMapLimits(thumbnailData as object) as object
     entry = invalid
     for each representation in thumbnailData
             thumbnailTiles = thumbnailData[representation]
-            if entry = invalid AND thumbnailTiles[0].width < 2048 AND thumbnailTiles[0].htiles < 2048
-                entry = thumbnailTiles
-            else if thumbnailTiles[0].width < 2048 AND thumbnailTiles.htiles < 2048 AND thumbnailTiles[0].width * thumbnailTiles[0].htiles > entry.width * entry.htiles
-                entry = thumbnailTiles
+            if thumbnailTiles[0].tiles.count() > 0 and thumbnailTiles[0].width < 2048 AND thumbnailTiles[0].htiles < 2048
+                if entry = invalid
+                    entry = thumbnailTiles
+                else if thumbnailTiles[0].width * thumbnailTiles[0].htiles > entry[0].width * entry[0].htiles
+                    entry = thumbnailTiles
+                end if
             end if
     end for
 #IF thumbnailDebug
