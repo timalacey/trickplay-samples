@@ -118,7 +118,8 @@ Function initThumbnails()
   m.trickInterval = 10  ' Default will be overriden by thumbnail interval in manifest'
 
   m.trickPlayTimer = createObject("roSGNode", "Timer")
-  m.trickPlayTimer.duration = 1
+  m.trickPlayTimerDurationDefault = 0.5
+  m.trickPlayTimer.duration = m.trickPlayTimerDurationDefault
   m.trickPlayTimer.repeat = True
   m.trickPlayTimer.observeField("fire", "handleTrickPlayTimer")
 
@@ -142,7 +143,7 @@ end Function
 Function resetSeekLogic()
   m.trickPlaySpeed = 0
   m.trickOffset = 0
-  m.trickPlayTimer.duration = 1
+  m.trickPlayTimer.duration = m.trickPlayTimerDurationDefault
 end Function
 
 Function isSeeking() as boolean
@@ -153,10 +154,10 @@ Function startSeeking()  ' key is either "fastforward" or "rewind"
     m.trickPlayTimer.control = "STOP"
 
     if m.trickPlaySpeed <> 0
-        m.trickPlayTimer.duration = 1 / abs(m.trickPlaySpeed)
+        m.trickPlayTimer.duration = m.trickPlayTimerDurationDefault / abs(m.trickPlaySpeed)^2
         m.trickPlayTimer.control = "START"
     else
-        m.TrickPlayTimer.duration = 1
+        m.TrickPlayTimer.duration = m.trickPlayTimerDurationDefault
     end if
 end Function
 

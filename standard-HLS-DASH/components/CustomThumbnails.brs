@@ -128,10 +128,7 @@ sub renderPoster(position as double, arrayPosterIndex as integer)
             rowColumnIndexes = getRowColumnIndexes(position, discontinuityIndex, spriteIndex)
             rowIndex = rowColumnIndexes.rowIndex
             columnIndex = rowColumnIndexes.columnIndex
-
-            posterWidth = invalid
-            posterHeight = invalid
-
+            
             ' The center poster will have a slightly different width and height.
             if arrayPosterIndex <> 2
                 posterWidth = m.POSTER_WIDTH
@@ -140,17 +137,23 @@ sub renderPoster(position as double, arrayPosterIndex as integer)
             end if
             thumbnail = m.selectedThumbnailData[discontinuityIndex]
             posterHeight = posterWidth * thumbnail.height/thumbnail.width
-
-            m.arrayPosters[arrayPosterIndex].clippingRect = [columnIndex * posterWidth, rowIndex * posterHeight, posterWidth, posterHeight]
-            newTranslationX = m.arrayPosters[arrayPosterIndex].x - (posterWidth * columnIndex)
-            newTranslationY = m.arrayPosters[arrayPosterIndex].y - (posterHeight * rowIndex)
-            m.arrayPosters[arrayPosterIndex].translation = [newTranslationX, newTranslationY]
+            m.arrayPosters[arrayPosterIndex].width = posterWidth
+            m.arrayPosters[arrayPosterIndex].height = posterHeight
+            
+            offsetX = columnIndex * posterWidth
+            offsetY = rowIndex * posterHeight
+            m.arrayPosters[arrayPosterIndex].findNode("poster").setFields({
+              clippingRect: [offsetX, offsetY, posterWidth, posterHeight]
+              translation: [- offsetX, - offsetY]
+            })
             m.arrayPosters[arrayPosterIndex].uri = thumbnail.tiles[spriteIndex][0]
+            m.arrayPosters[arrayPosterIndex].visible = true
         else
             #IF thumbnailDebug
                 ? "Thumbnail for poster index " + arrayPosterIndex.toStr() + " will be empty."
                 ? "Position attempted to render poster: " + position.toStr()
             #ENDIF
+            m.arrayPosters[arrayPosterIndex].visible = false
             m.arrayPosters[arrayPosterIndex].uri = ""
         end if
     else
@@ -158,6 +161,7 @@ sub renderPoster(position as double, arrayPosterIndex as integer)
             ? "Thumbnail for poster index " + arrayPosterIndex.toStr() + " will be empty."
             ? "Position attempted to render poster: " + position.toStr()
         #ENDIF
+        m.arrayPosters[arrayPosterIndex].visible = false
         m.arrayPosters[arrayPosterIndex].uri = ""
     end if
 end sub

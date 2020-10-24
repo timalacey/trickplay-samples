@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<component name="Thumbnail" extends="Group" >
+
+  <script type="text/brightscript" uri = "Thumbnail.brs"/>
+
+  <interface>
+    <field id="loadHeight" type="float" alias="poster.loadHeight"/>
+    <field id="loadWidth" type="float" alias="poster.loadWidth"/>
+    <field id="uri" type="string" alias="poster.uri"/>
+    <field id="width" type="float" alias="rectangle.width"/>
+    <field id="height" type="float" alias="rectangle.height"/>
+  </interface>
+
+  <children>
+    <Rectangle
+      id="rectangle"
+      color="0x662D91FF"/>
+
+    <Poster
+      id="poster"
+      loadDisplayMode="ScaleToFit"/>
+  </children>
+
+</component>
