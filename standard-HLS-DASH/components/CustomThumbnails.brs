@@ -282,24 +282,37 @@ sub dumpThumbnailData(thumbnailData as object)
 ? "***** finished dumping thumbnail data"
 end sub
 
+' /**
+'  * @name getPosterDimensionLimit
+'  * @function
+'  * @instance
+'  * @description Fail immediately, with the given message
+'  * @returns {integer} - maximum pixel length or width that can be loaded into texture memory
+'  */
+function getPosterDimensionLimit() as integer
+  res = CreateObject("roDeviceInfo").CanDecodeVideo({"Codec": "hevc"})
+  if res.result = true
+    return 4096
+  else
+    return 2048 
+  end if
+end function
+
 ' We need a function that will return the max width (4096 pix) entries as
 ' there's a limit of max sized texture images in R2D2.
 function thumbnailEntryForTextureMapLimits(thumbnailData as object) as object
     entry = invalid
-    posterDimensionLimit = 2048
-    ' if 'TTV2 or 3 ' TODO find a programatic way to do this
-    '   posterDimensionLimit = 4096
-    ' end if
+    posterDimensionLimit = getPosterDimensionLimit()
     for each representation in thumbnailData
         thumbnailTiles = thumbnailData[representation]
         if thumbnailTiles[0].tiles.count() > 0
             tileWidth = thumbnailTiles[0].width * thumbnailTiles[0].htiles
             tileHeight = thumbnailTiles[0].height * thumbnailTiles[0].vtiles
             ? "thumbnailEntryForTextureMapLimits() |tileWidth="; tileWidth; "|tileHeight="; tileHeight; "|"
-            if tileWidth < posterDimensionLimit and tileHeight < posterDimensionLimit
+            if tileWidth <= posterDimensionLimit and tileHeight <= posterDimensionLimit
                 if entry = invalid
                     entry = thumbnailTiles
-                else if thumbnailTiles[0].width * thumbnailTiles[0].htiles > entry[0].width * entry[0].htiles
+                else if tileWidth > entry[0].width * entry[0].htiles
                     entry = thumbnailTiles
                 end if
             else
