@@ -5,6 +5,8 @@
 
 sub initCustomThumbnails(msg as object)
     thumbnailData = msg.getData()
+    ? "initCustomThumbnails() |thumbnailData="; formatJson(thumbnailData); "|"
+
     if m.customThumbnailData = invalid
       m.customThumbnailData = thumbnailData
     else if thumbnailData.items()[0].value[0].width > m.customThumbnailData.items()[0].value[0].width
@@ -164,6 +166,7 @@ sub renderPoster(position as double, arrayPosterIndex as integer)
         m.arrayPosters[arrayPosterIndex].visible = false
         m.arrayPosters[arrayPosterIndex].uri = ""
     end if
+    ? "renderPoster() |m.arrayPosters[arrayPosterIndex].uri="; m.arrayPosters[arrayPosterIndex].uri
 end sub
 
 ' Returns the discontinuity index based on the position being requested. This is
@@ -306,8 +309,13 @@ function thumbnailEntryForTextureMapLimits(thumbnailData as object) as object
     for each representation in thumbnailData
         thumbnailTiles = thumbnailData[representation]
         if thumbnailTiles[0].tiles.count() > 0
-            tileWidth = thumbnailTiles[0].width * thumbnailTiles[0].htiles
-            tileHeight = thumbnailTiles[0].height * thumbnailTiles[0].vtiles
+
+            thumbnailWidth = 320
+            thumbnailHeight = 320 * thumbnailTiles[0].height / thumbnailTiles[0].width
+
+            tileWidth = thumbnailWidth * thumbnailTiles[0].htiles
+            tileHeight = thumbnailHeight * thumbnailTiles[0].vtiles
+
             ? "thumbnailEntryForTextureMapLimits() |tileWidth="; tileWidth; "|tileHeight="; tileHeight; "|"
             if tileWidth <= posterDimensionLimit and tileHeight <= posterDimensionLimit
                 if entry = invalid

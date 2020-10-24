@@ -29,8 +29,6 @@ end sub
 
 'Set your information here
 sub setContent()
-
-
   m.Image.uri="pkg:/images/BigBuckBunny.jpg"
   ContentNode = CreateObject("roSGNode", "ContentNode")
 
