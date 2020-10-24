@@ -30,13 +30,13 @@ video_stream_format=dash
 # PASS 256x144 and 102x58, but 102x58 doesn't work
 # video_stream_url=https://image.roku.com/ZHZscHItc2Ft/roku/trickplay/bbb-with-multiple-tiled-thumbnails.mpd
 
-# TODO FAIL logs look right, image won't render 320x180
+# FAIL logs look right, tiles are too large, cannot be loaded into texture memory
 # Single adaption set, 7 tiles at 10x1, each thumb 320x180
 # video_stream_url=https://dash.akamaized.net/akamai/bbb_30fps/bbb_with_tiled_thumbnails.mpd
 
 # TODO FAIL, final tile returns 404? 205x115
 # Single adaption set, 4 tiles at 10x1, each thumb 205x115
-# video_stream_url=https://dash.akamaized.net/akamai/bbb_30fps/bbb_with_4_tiles_thumbnails.mpd
+video_stream_url=https://dash.akamaized.net/akamai/bbb_30fps/bbb_with_4_tiles_thumbnails.mpd
 
 # TODO FAIL, 102x58 final tile returns 404?
 # Single adaption set, 1 tile at 10x20, each thumb 102x58
@@ -50,15 +50,15 @@ video_stream_format=dash
 # SegmentBase, Single adaption set, 3x4 tiles
 # video_stream_url=https://demo.unified-streaming.com/video/tears-of-steel/tears-of-steel-tiled-thumbnails-static.mpd
 
-# FAIL change to video.thumbnailTiles, but no tiles, likely due to SegmentTimeline
+# FAIL change to video.thumbnailTiles, but no tiles, likely due to SegmentTimeline unsupported https://developer.roku.com/docs/specs/media/dash-if.md
 # SegmentTemplate with SegmentTimeline
 # video_stream_url=https://demo.unified-streaming.com/video/tears-of-steel/tears-of-steel-tiled-thumbnails-timeline.ism/.mpd
 
 # PASS 224x100, not 16:9
 # SegmentNumber
-video_stream_url=https://demo.unified-streaming.com/video/tears-of-steel/tears-of-steel-tiled-thumbnails-numbered.ism/.mpd
+# video_stream_url=https://demo.unified-streaming.com/video/tears-of-steel/tears-of-steel-tiled-thumbnails-numbered.ism/.mpd
 
-# FAIL change to video.thumbnailTiles, but no tiles, live not yet supported
+# FAIL change to video.thumbnailTiles, but no tiles, live not yet supported https://developer.roku.com/docs/specs/media/dash-if.md
 # Live stream, Single adaptation set, 1x1 tiles (livesim)
 # video_stream_url=https://livesim.dashif.org/livesim/testpic_2s/Manifest_thumbs.mpd
 

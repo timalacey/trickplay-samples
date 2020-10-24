@@ -286,15 +286,26 @@ end sub
 ' there's a limit of max sized texture images in R2D2.
 function thumbnailEntryForTextureMapLimits(thumbnailData as object) as object
     entry = invalid
+    posterDimensionLimit = 2048
+    ' if 'TTV2 or 3 ' TODO find a programatic way to do this
+    '   posterDimensionLimit = 4096
+    ' end if
     for each representation in thumbnailData
-            thumbnailTiles = thumbnailData[representation]
-            if thumbnailTiles[0].tiles.count() > 0 and thumbnailTiles[0].width < 2048 AND thumbnailTiles[0].htiles < 2048
+        thumbnailTiles = thumbnailData[representation]
+        if thumbnailTiles[0].tiles.count() > 0
+            tileWidth = thumbnailTiles[0].width * thumbnailTiles[0].htiles
+            tileHeight = thumbnailTiles[0].height * thumbnailTiles[0].vtiles
+            ? "thumbnailEntryForTextureMapLimits() |tileWidth="; tileWidth; "|tileHeight="; tileHeight; "|"
+            if tileWidth < posterDimensionLimit and tileHeight < posterDimensionLimit
                 if entry = invalid
                     entry = thumbnailTiles
                 else if thumbnailTiles[0].width * thumbnailTiles[0].htiles > entry[0].width * entry[0].htiles
                     entry = thumbnailTiles
                 end if
+            else
+              ? "WARN tiles are too large, cannot be loaded into texture memory"
             end if
+        end if
     end for
 #IF thumbnailDebug
     if entry <> invalid
