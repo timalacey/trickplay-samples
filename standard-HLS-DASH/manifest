@@ -26,8 +26,44 @@ splash_min_time=0
 # Resolution
 ui_resolutions=fhd
 
-#video_stream_format=dash
-#video_stream_url=https://image.roku.com/ZHZscHItc2Ft/roku/trickplay/bbb-with-multiple-tiled-thumbnails.mpd
-video_stream_format=hls
-video_stream_url=https://image.roku.com/ZHZscHItc2Ft/roku/trickplay/master.m3u8
+video_stream_format=dash
+# PASS 256x144 and 102x58, but 102x58 doesn't work
+# video_stream_url=https://image.roku.com/ZHZscHItc2Ft/roku/trickplay/bbb-with-multiple-tiled-thumbnails.mpd
+
+# TODO FAIL logs look right, image won't render 320x180
+# Single adaption set, 7 tiles at 10x1, each thumb 320x180
+# video_stream_url=https://dash.akamaized.net/akamai/bbb_30fps/bbb_with_tiled_thumbnails.mpd
+
+# TODO FAIL, final tile returns 404? 205x115
+# Single adaption set, 4 tiles at 10x1, each thumb 205x115
+# video_stream_url=https://dash.akamaized.net/akamai/bbb_30fps/bbb_with_4_tiles_thumbnails.mpd
+
+# TODO FAIL, 102x58 final tile returns 404?
+# Single adaption set, 1 tile at 10x20, each thumb 102x58
+# video_stream_url=https://dash.akamaized.net/akamai/bbb_30fps/bbb_with_tiled_thumbnails_2.mpd
+
+# PASS
+# Two adaption sets with different thumb resolutions
+# video_stream_url=https://dash.akamaized.net/akamai/bbb_30fps/bbb_with_multiple_tiled_thumbnails.mpd
+
+# FAIL no change to video.thumbnailTiles
+# SegmentBase, Single adaption set, 3x4 tiles
+# video_stream_url=https://demo.unified-streaming.com/video/tears-of-steel/tears-of-steel-tiled-thumbnails-static.mpd
+
+# FAIL change to video.thumbnailTiles, but no tiles, likely due to SegmentTimeline
+# SegmentTemplate with SegmentTimeline
+# video_stream_url=https://demo.unified-streaming.com/video/tears-of-steel/tears-of-steel-tiled-thumbnails-timeline.ism/.mpd
+
+# PASS 224x100, not 16:9
+# SegmentNumber
+video_stream_url=https://demo.unified-streaming.com/video/tears-of-steel/tears-of-steel-tiled-thumbnails-numbered.ism/.mpd
+
+# FAIL change to video.thumbnailTiles, but no tiles, live not yet supported
+# Live stream, Single adaptation set, 1x1 tiles (livesim)
+# video_stream_url=https://livesim.dashif.org/livesim/testpic_2s/Manifest_thumbs.mpd
+
+# video_stream_format=hls
+# PASS
+# video_stream_url=https://image.roku.com/ZHZscHItc2Ft/roku/trickplay/master.m3u8
+
 bs_const=thumbnailDebug=true
